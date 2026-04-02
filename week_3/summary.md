@@ -1,11 +1,14 @@
 # Weekly Progress Report - Week 3
 
 ## Overview
-This week, I worked through the Nervos CKB tutorial on creating a fungible token using the xUDT standard.
+This week, I worked through two practical Nervos CKB dApp tutorials:
 
-The main focus of the week was understanding how custom tokens are represented in the CKB Cell model, how they are issued, how token holders can be queried, and how tokens are transferred between users.
+- Create a Fungible Token
+- Create a DOB
 
-## Completed Tutorial
+The main focus of the week was understanding how CKB represents different kinds of digital assets on-chain. I learned how fungible tokens are created with xUDT and how digital objects can be created and rendered using the Spore Protocol.
+
+## Completed Tutorials
 
 ### 1. Create a Fungible Token
 - Learned that custom tokens on CKB are called User-Defined Tokens (UDTs), and that xUDT is the minimal extensible standard used to issue them.
@@ -14,29 +17,36 @@ The main focus of the week was understanding how custom tokens are represented i
 - Understood that the issuer's lock script hash is used as the unique identifier for the token, which becomes the `args` of the xUDT type script.
 - Saw how the CCC SDK is used to construct the transaction, add required cell dependencies, complete inputs by capacity, calculate fees, sign, and send the transaction.
 
+### 2. Create a DOB
+- Learned that a DOB on CKB can be created using the Spore Protocol, which stores digital objects directly on-chain.
+- Understood that a Spore Cell contains structured data such as `content-type` and `content`, allowing files like images to become digital objects on the blockchain.
+- Learned that Spore Cells are immutable after creation, which makes the stored digital object permanent in its created form.
+- Saw how file content from the browser can be read as an `ArrayBuffer`, converted into a `Uint8Array`, and then passed into the transaction as the digital object's content.
+- Learned that the Spore SDK simplifies creation of the digital object Cell and handles transaction building before signing and broadcasting it.
+
 ## What I Understood
 
-### Token Creation in the Cell Model
+### Fungible Tokens in the Cell Model
 I understood that creating a fungible token on CKB is really about creating a special output Cell. That Cell contains the token amount in its `data` field and uses the xUDT `type` script to define the token's behavior.
 
-### Token Identity
-I learned that the identity of a token is tied to the issuer's lock script hash. This means each token type is uniquely identified by the issuer, not by a contract address in the account-model sense.
+### Token Identity and Ownership
+I learned that the identity of a token is tied to the issuer's lock script hash. I also understood that ownership is determined by the lock script attached to each token Cell, and transferring tokens means creating a new Cell with the receiver's lock script.
 
-### Querying Token Holders
-I understood that to find issued tokens and their holders, you query live Cells by the xUDT type script. Once those Cells are found, the lock scripts attached to them show who currently controls those token balances.
+### Digital Objects as On-Chain Assets
+I understood that CKB can also store richer digital assets, not just token balances or plain text. With Spore, a Cell can represent a digital object whose actual content, such as an image, is encoded directly on-chain.
 
-### Token Transfer Logic
-I learned that transferring a token means creating a new token Cell for the receiver with the same xUDT type script but a different lock script. The receiver becomes the new holder because they can unlock that Cell.
+### Spore Cell Structure
+I learned that a Spore Cell includes both metadata and binary content. The `content-type` tells the application how to interpret the file, while the `content` holds the actual bytes of the object.
 
-### Change and Balance Handling
-I also understood that if the sender provides more token amount than is being sent, the remaining balance must be returned in a change Cell. This is similar to how CKB capacity change is handled in normal transactions.
+### Reading and Rendering a DOB
+I understood that after creating a digital object, it can be retrieved by locating the correct live Cell using its transaction hash and output index. The stored data can then be unpacked, converted back into binary form, and rendered in the browser.
 
 ## Key Takeaways
-- xUDT is the standard used to create fungible tokens on CKB.
-- A token amount is stored in the `data` field of a Cell, not in an account balance.
-- The issuer's lock script hash acts as the unique token ID through the xUDT script arguments.
-- Token holders can be discovered by querying live Cells with the matching xUDT type script.
-- Token transfers happen by creating new Cells with the correct lock and type scripts, while also handling token change and transaction fees.
+- CKB can represent different asset types through Cells, including fungible tokens and digital objects.
+- xUDT is used for fungible tokens, while Spore Protocol is used for DOBs.
+- A token amount is stored in a Cell's `data` field, and a digital object's content is also stored directly in Cell data.
+- Lock scripts define ownership, while type scripts define the rules and structure of the asset.
+- Building on CKB requires understanding how transactions create, transform, and expose on-chain assets through Cells.
 
 ## Summary
-Week 3 helped me understand how fungible tokens are built on Nervos CKB using the Cell model. I now have a clearer idea of how token issuance, token identity, querying holders, and token transfer all work through Cells, scripts, and transaction construction rather than through the account-based token logic used on many other blockchains.
+Week 3 helped me understand that Nervos CKB is not limited to simple transfers or balances. I learned how fungible tokens are issued and transferred with xUDT, and how digital objects can be created and displayed on-chain using Spore. This gave me a stronger understanding of how flexible the Cell model is for representing different forms of blockchain state and assets.
