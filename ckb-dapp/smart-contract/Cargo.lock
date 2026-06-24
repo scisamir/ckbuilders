@@ -686,6 +686,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "dex-order-lock"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
+]
+
+[[package]]
 name = "digest"
 version = "0.10.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
